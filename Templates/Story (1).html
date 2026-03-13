@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Disease Story | Interactive Narrative</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --crimson: #7f1d1d;
+      --crimson-light: #991b1b;
+      --gold: #fbbf24;
+      --gold-light: #fcd34d;
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --teal: #14b8a6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    /* CINEMATIC HEADER */
+    .story-header {
+      position: relative;
+      min-height: 35vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 40px;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--crimson) 0%, var(--navy) 100%);
+    }
+
+    .story-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23fbbf24' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.5;
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+    }
+
+    .breadcrumb {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 30px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .breadcrumb a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--gold-light);
+    }
+
+    .breadcrumb span {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .page-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 25px;
+      background: linear-gradient(135deg, #ffffff 0%, var(--gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .title-accent {
+      display: block;
+      font-size: 24px;
+      font-weight: 300;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-top: 15px;
+      -webkit-text-fill-color: var(--gold);
+    }
+
+    .story-subtitle {
+      font-size: 18px;
+      line-height: 1.8;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* PROGRESS INDICATOR */
+    .story-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.5);
+    }
+
+    /* MAIN TABLEAU SECTION */
+    .tableau-section {
+      padding: 60px;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 50%, var(--navy) 100%);
+      min-height: 100vh;
+    }
+
+    .content-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* CHAPTER HEADER */
+    .chapter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 40px;
+      padding-bottom: 30px;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .chapter-info h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--teal);
+      margin-bottom: 10px;
+    }
+
+    .chapter-info h2 {
+      font-size: 36px;
+      font-weight: 600;
+      color: #ffffff;
+    }
+
+    .chapter-info h2 span {
+      color: var(--gold);
+    }
+
+    .chapter-controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    .control-btn {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      border: 2px solid rgba(251, 191, 36, 0.3);
+      background: transparent;
+      color: var(--gold);
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .control-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+
+    /* TABLEAU CONTAINER */
+    .tableau-container {
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+      border: 2px solid rgba(251, 191, 36, 0.15);
+      border-radius: 24px;
+      padding: 40px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4), inset 0 0 100px rgba(251, 191, 36, 0.02);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tableau-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .viz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .viz-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .viz-badge {
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--gold);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .viz-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .action-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .action-btn.primary {
+      background: var(--gold);
+      color: var(--navy);
+      border-color: var(--gold);
+    }
+
+    /* TABLEAU PLACEHOLDER */
+    .tableauPlaceholder {
+      position: relative;
+      width: 100% !important;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--navy);
+      border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+
+    .tableauPlaceholder object {
+      width: 100% !important;
+      height: 900px !important;
+      border: none;
+      display: block;
+    }
+
+    /* INSIGHTS PANEL */
+    .insights-panel {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 50px;
+    }
+
+    .insight-card {
+      background: rgba(30, 41, 59, 0.4);
+      border: 1px solid rgba(251, 191, 36, 0.1);
+      border-radius: 16px;
+      padding: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .insight-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(251, 191, 36, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .insight-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .insight-card h4 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .insight-card p {
+      font-size: 14px;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .insight-stat {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-value-small {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .stat-label-small {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* FOOTER */
+    .story-footer {
+      background: var(--navy-light);
+      padding: 40px 60px;
+      border-top: 1px solid rgba(251, 191, 36, 0.1);
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    .footer-nav a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-nav a:hover {
+      color: var(--gold);
+    }
+
+    .footer-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .page-title {
+        font-size: 48px;
+      }
+
+      .tableau-section {
+        padding: 40px;
+      }
+
+      .tableauPlaceholder object {
+        height: 700px !important;
+      }
+
+      .insights-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .story-header {
+        min-height: 40vh;
+        padding: 40px 20px;
+      }
+
+      .page-title {
+        font-size: 36px;
+      }
+
+      .title-accent {
+        font-size: 16px;
+        letter-spacing: 4px;
+      }
+
+      .tableau-section {
+        padding: 30px 20px;
+      }
+
+      .tableau-container {
+        padding: 25px;
+      }
+
+      .tableauPlaceholder object {
+        height: 500px !important;
+      }
+
+      .chapter-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .viz-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        gap: 20px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- CINEMATIC HEADER -->
+  <header class="story-header">
+    <div class="header-content">
+      <div class="breadcrumb">
+        <a href="index.html">Home</a>
+        <span>/</span>
+        <span>Analysis</span>
+        <span>/</span>
+        <span style="color: var(--gold);">Story</span>
+      </div>
+
+      <h1 class="page-title">
+        Heart Disease Story
+        <span class="title-accent">Interactive Narrative</span>
+      </h1>
+
+      <p class="story-subtitle">
+        A complete visual journey through cardiovascular risk data.
+        Navigate through chapters to uncover insights from demographics to lifestyle factors.
+      </p>
+    </div>
+
+    <div class="story-progress">
+      <div class="progress-bar"></div>
+    </div>
+  </header>
+
+  <!-- MAIN TABLEAU SECTION -->
+  <section class="tableau-section">
+    <div class="content-wrapper">
+
+      <!-- CHAPTER HEADER -->
+      <div class="chapter-header">
+        <div class="chapter-info">
+          <h3>Complete Analysis</h3>
+          <h2>Multi-Chapter <span>Data Story</span></h2>
+        </div>
+        <div class="chapter-controls">
+          <button class="control-btn" onclick="alert('Use Tableau toolbar arrows to navigate chapters')" title="Previous">←</button>
+          <button class="control-btn" onclick="alert('Use Tableau toolbar arrows to navigate chapters')" title="Next">→</button>
+        </div>
+      </div>
+
+      <!-- TABLEAU EMBED -->
+      <div class="tableau-container">
+        <div class="viz-header">
+          <div class="viz-title">
+            📊 Tableau Story
+            <span class="viz-badge">Live</span>
+          </div>
+          <div class="viz-actions">
+            <button class="action-btn" onclick="resetViz()">Reset View</button>
+            <a href="https://public.tableau.com/views/update_17734128932530/Story1" target="_blank" class="action-btn primary">Open in Tableau</a>
+          </div>
+        </div>
+
+        <!-- YOUR TABLEAU EMBED CODE -->
+        <div class='tableauPlaceholder' id='viz1773415660397' style='position: relative'>
+          <noscript>
+            <a href='#'>
+              <img alt='Heart Disease Story' src='https://public.tableau.com/static/images/up/update_17734128932530/Story1/1_rss.png' style='border: none' />
+            </a>
+          </noscript>
+          <object class='tableauViz' style='display:none;'>
+            <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+            <param name='embed_code_version' value='3' />
+            <param name='site_root' value='' />
+            <param name='name' value='update_17734128932530/Story1' />
+            <param name='tabs' value='no' />
+            <param name='toolbar' value='yes' />
+            <param name='static_image' value='https://public.tableau.com/static/images/up/update_17734128932530/Story1/1.png' />
+            <param name='animate_transition' value='yes' />
+            <param name='display_static_image' value='yes' />
+            <param name='display_spinner' value='yes' />
+            <param name='display_overlay' value='yes' />
+            <param name='display_count' value='yes' />
+            <param name='language' value='en-US' />
+            <param name='filter' value='publish=yes' />
+          </object>
+        </div>
+      </div>
+
+      <!-- INSIGHTS -->
+      <div class="insights-panel">
+        <div class="insight-card">
+          <div class="insight-icon">📖</div>
+          <h4>Story Navigation</h4>
+          <p>Use the arrow buttons in the Tableau toolbar to navigate between chapters, or click directly on story points.</p>
+          <div class="insight-stat">
+            <div class="stat-value-small">3</div>
+            <div class="stat-label-small">Chapters</div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-icon">🔍</div>
+          <h4>Interactive Filters</h4>
+          <p>Click on any data point to filter the entire dashboard. Use the toolbar for additional options.</p>
+          <div class="insight-stat">
+            <div class="stat-value-small">100%</div>
+            <div class="stat-label-small">Interactive</div>
+          </div>
+        </div>
+
+        <div class="insight-card">
+          <div class="insight-icon">💡</div>
+          <h4>Key Takeaways</h4>
+          <p>Each chapter reveals critical insights about risk factors, from demographics to lifestyle choices.</p>
+          <div class="insight-stat">
+            <div class="stat-value-small">6+</div>
+            <div class="stat-label-small">Risk Factors</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="story-footer">
+    <div class="footer-content">
+      <div class="footer-nav">
+        <a href="index.html">← Back to Home</a>
+        <a href="https://public.tableau.com/views/update_17734128932530/Story1" target="_blank">View Full Screen</a>
+        <a href="#" onclick="shareStory()">Share Story</a>
+      </div>
+      <div class="footer-status">
+        <span class="status-dot"></span>
+        <span>Tableau Public Connected</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Initialize Tableau
+    var divElement = document.getElementById('viz1773415660397');
+    var vizElement = divElement.getElementsByTagName('object')[0];
+    vizElement.style.width = '100%';
+    vizElement.style.height = '900px';
+    var scriptElement = document.createElement('script');
+    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+    // Reset Function
+    function resetViz() {
+      location.reload();
+    }
+    // Share Function
+    function shareStory() {
+      var url = 'https://public.tableau.com/views/update_17734128932530/Story1';
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url);
+        alert('Link copied to clipboard!');
+      } else {
+        prompt('Copy this link:', url);
+      }
+    }
+  </script>
+</body>
+
+</html>

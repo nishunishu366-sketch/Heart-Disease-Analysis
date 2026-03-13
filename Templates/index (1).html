@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Untitled</title>
+    
+
+  </head>
+    
+  <body>
+  <!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Heart Disease Intelligence Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --crimson: #7f1d1d;
+      --crimson-light: #991b1b;
+      --gold: #fbbf24;
+      --gold-light: #fcd34d;
+      --navy: #0f172a;
+      --navy-light: #1e293b;
+      --teal: #14b8a6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 55% 45%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--crimson) 0%, var(--navy) 50%, var(--navy-light) 100%);
+      clip-path: polygon(0 0, 70% 0, 50% 100%, 0 100%);
+      z-index: 0;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 80px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      width: fit-content;
+      margin-bottom: 30px;
+    }
+
+    .hero-content h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 72px;
+      font-weight: 700;
+      line-height: 0.95;
+      margin-bottom: 30px;
+      color: #ffffff;
+    }
+
+    .hero-content h1 span {
+      color: var(--gold);
+      display: block;
+      font-size: 48px;
+      font-weight: 300;
+      margin-top: 10px;
+      letter-spacing: 8px;
+      text-transform: uppercase;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 500px;
+      margin-bottom: 40px;
+      padding-left: 20px;
+      border-left: 3px solid var(--gold);
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 18px 40px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 40px rgba(251, 191, 36, 0.3);
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 60px rgba(251, 191, 36, 0.4);
+      background: var(--gold-light);
+    }
+
+    .btn-secondary {
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: gap 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      gap: 15px;
+      color: var(--gold);
+    }
+
+    /* HERO VISUAL */
+    .hero-visual {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .visual-container {
+      position: relative;
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .main-image {
+      width: 100%;
+      border-radius: 20px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(251, 191, 36, 0.3);
+    }
+
+    .floating-card {
+      position: absolute;
+      background: rgba(30, 41, 59, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      padding: 20px 25px;
+      border-radius: 16px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-card.top {
+      top: -30px;
+      right: -30px;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .floating-card.bottom {
+      bottom: 40px;
+      left: -40px;
+      animation: float 6s ease-in-out infinite reverse;
+    }
+
+    .floating-card h4 {
+      font-size: 28px;
+      color: var(--gold);
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .floating-card p {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    /* TABLEAU DASHBOARD SECTION */
+    .dashboard-preview {
+      padding: 80px 60px;
+      background: linear-gradient(180deg, var(--navy-light) 0%, var(--navy) 100%);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-tag {
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .section-title span {
+      color: var(--gold);
+    }
+
+    .section-desc {
+      color: rgba(255, 255, 255, 0.7);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* TABLEAU CONTAINER */
+    .tableau-wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.8));
+      border: 2px solid rgba(251, 191, 36, 0.2);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    .tableau-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .tableau-title {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .tableau-icon {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-light));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .tableau-title h3 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .tableau-title p {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 4px;
+    }
+
+    .tableau-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      background: rgba(251, 191, 36, 0.1);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .action-btn:hover {
+      background: var(--gold);
+      color: var(--navy);
+    }
+
+    .tableau-container {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--navy);
+      border: 1px solid rgba(251, 191, 36, 0.1);
+    }
+
+    .tableauPlaceholder {
+      width: 100% !important;
+    }
+
+    .tableauPlaceholder object {
+      width: 100% !important;
+      height: 827px !important;
+      border: none;
+      display: block;
+    }
+
+    /* STATS STRIP */
+    .stats-strip {
+      background: var(--navy-light);
+      padding: 40px 60px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      border-top: 1px solid rgba(251, 191, 36, 0.2);
+      border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+    }
+
+    .stat-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      right: -50%;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 40px;
+      background: rgba(251, 191, 36, 0.3);
+    }
+
+    .stat-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 8px;
+    }
+
+    /* OVERVIEW SECTION */
+    .overview-section {
+      padding: 100px 60px;
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-light) 100%);
+    }
+
+    .overview-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .overview-card {
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      border-radius: 20px;
+      padding: 40px;
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .overview-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--gold), var(--teal));
+      transform: scaleX(0);
+      transition: transform 0.4s ease;
+    }
+
+    .overview-card:hover {
+      transform: translateY(-10px);
+      border-color: rgba(251, 191, 36, 0.4);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .overview-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .overview-card.large {
+      grid-column: span 7;
+    }
+
+    .overview-card.small {
+      grid-column: span 5;
+    }
+
+    .overview-card.full {
+      grid-column: span 12;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .card-icon {
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--crimson), var(--crimson-light));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 25px;
+    }
+
+    .overview-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #ffffff;
+    }
+
+    .overview-card p {
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.7;
+      font-size: 16px;
+    }
+
+    .card-metrics {
+      display: flex;
+      gap: 40px;
+      margin-top: 30px;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .metric {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 5px;
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: var(--navy-light);
+      padding: 40px 60px;
+      border-top: 1px solid rgba(251, 191, 36, 0.1);
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-nav {
+      display: flex;
+      gap: 30px;
+    }
+
+    .footer-nav a {
+      color: rgba(255, 255, 255, 0.6);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-nav a:hover {
+      color: var(--gold);
+    }
+
+    .footer-brand {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--gold);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .hero::before {
+        clip-path: polygon(0 0, 100% 0, 100% 60%, 0 100%);
+      }
+
+      .hero-visual {
+        display: none;
+      }
+
+      .hero-content {
+        padding: 60px 40px;
+        text-align: center;
+      }
+
+      .hero-content h1 {
+        font-size: 48px;
+      }
+
+      .hero-desc {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .hero-cta {
+        justify-content: center;
+      }
+
+      .overview-card.large,
+      .overview-card.small,
+      .overview-card.full {
+        grid-column: span 12;
+      }
+
+      .overview-card.full {
+        grid-template-columns: 1fr;
+      }
+
+      .tableauPlaceholder object {
+        height: 600px !important;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .stats-strip {
+        flex-direction: column;
+        gap: 30px;
+        padding: 40px;
+      }
+
+      .stat-item:not(:last-child)::after {
+        display: none;
+      }
+
+      .section-title {
+        font-size: 36px;
+      }
+
+      .tableau-wrapper {
+        padding: 20px;
+      }
+
+      .tableauPlaceholder object {
+        height: 400px !important;
+      }
+
+      .tableau-header {
+        flex-direction: column;
+        gap: 20px;
+        align-items: flex-start;
+      }
+
+      .footer-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- DIAGONAL HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span>⚡</span> Live Tableau Dashboard
+      </div>
+      <h1>
+        Heart Disease
+        <span>Intelligence</span>
+      </h1>
+      <p class="hero-desc">
+        Advanced cardiovascular risk assessment through interactive Tableau visualization.
+        Explore the complete data story with embedded analytics.
+      </p>
+      <div class="hero-cta">
+        <a href="#dashboard" class="btn-primary">View Dashboard</a>
+        <a href="story.html" class="btn-secondary">
+          Read Story <span>→</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-container">
+        <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=80" alt="Medical Analytics" class="main-image">
+        <div class="floating-card top">
+          <h4>94%</h4>
+          <p>Accuracy Rate</p>
+        </div>
+        <div class="floating-card bottom">
+          <h4>1,000+</h4>
+          <p>Patient Records</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TABLEAU DASHBOARD SECTION -->
+  <section class="dashboard-preview" id="dashboard">
+    <div class="section-header">
+      <div class="section-tag">Interactive Visualization</div>
+      <h2 class="section-title">
+        Live <span>Tableau</span> Dashboard
+      </h2>
+      <p class="section-desc">
+        Explore the complete heart disease analysis story with real-time interactive filters,
+        drill-downs, and comparative analytics.
+      </p>
+    </div>
+
+    <div class="tableau-wrapper">
+      <div class="tableau-header">
+        <div class="tableau-title">
+          <div class="tableau-icon">📊</div>
+          <div>
+            <h3>Heart Disease Story</h3>
+            <p>Multi-chapter interactive analysis</p>
+          </div>
+        </div>
+        <div class="tableau-actions">
+          <button class="action-btn" onclick="resetViz()">Reset</button>
+          <a href="https://public.tableau.com/views/update_17734128932530/Story1" target="_blank" class="action-btn">Fullscreen</a>
+        </div>
+      </div>
+
+      <div class="tableau-container">
+        <!-- TABLEAU EMBED CODE -->
+        <div class='tableauPlaceholder' id='viz1773415660397' style='position: relative'>
+          <noscript>
+            <a href='#'>
+              <img alt='Heart Disease Story' src='https://public.tableau.com/static/images/up/update_17734128932530/Story1/1_rss.png' style='border: none' />
+            </a>
+          </noscript>
+          <object class='tableauViz' style='display:none;'>
+            <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+            <param name='embed_code_version' value='3' />
+            <param name='site_root' value='' />
+            <param name='name' value='update_17734128932530/Story1' />
+            <param name='tabs' value='no' />
+            <param name='toolbar' value='yes' />
+            <param name='static_image' value='https://public.tableau.com/static/images/up/update_17734128932530/Story1/1.png' />
+            <param name='animate_transition' value='yes' />
+            <param name='display_static_image' value='yes' />
+            <param name='display_spinner' value='yes' />
+            <param name='display_overlay' value='yes' />
+            <param name='display_count' value='yes' />
+            <param name='language' value='en-US' />
+            <param name='filter' value='publish=yes' />
+          </object>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="stat-item">
+      <div class="stat-number">03</div>
+      <div class="stat-label">Story Chapters</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">06</div>
+      <div class="stat-label">Risk Factors</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">1K+</div>
+      <div class="stat-label">Data Points</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">100%</div>
+      <div class="stat-label">Interactive</div>
+    </div>
+  </div>
+
+  <!-- OVERVIEW SECTION -->
+  <section class="overview-section">
+    <div class="overview-header">
+      <div class="section-tag">Project Overview</div>
+      <h2 class="section-title">
+        Comprehensive <span>Analysis</span>
+      </h2>
+    </div>
+
+    <div class="overview-grid">
+      <div class="overview-card large">
+        <div class="card-icon">📈</div>
+        <h3>Data Storytelling</h3>
+        <p>The Tableau dashboard presents a narrative journey through cardiovascular data,
+          guiding users from overview to detailed insights through interactive chapters.</p>
+        <div class="card-metrics">
+          <div class="metric">
+            <span class="metric-value">3</span>
+            <span class="metric-label">Chapters</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">12</span>
+            <span class="metric-label">Visualizations</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="overview-card small">
+        <div class="card-icon">🎯</div>
+        <h3>Key Insights</h3>
+        <p>Discover hidden patterns between lifestyle choices, medical history, and heart disease risk through dynamic filtering.</p>
+      </div>
+
+      <div class="overview-card full">
+        <div>
+          <div class="card-icon">🔬</div>
+          <h3>Methodology</h3>
+          <p>Built with Tableau Public, featuring embedded analytics, real-time filtering, and mobile-responsive design for seamless data exploration.</p>
+        </div>
+        <div class="card-metrics" style="margin-top: 0; padding-top: 0; border: none;">
+          <div class="metric">
+            <span class="metric-value">Tableau</span>
+            <span class="metric-label">Platform</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">Public</span>
+            <span class="metric-label">Access</span>
+          </div>
+          <div class="metric">
+            <span class="metric-value">Live</span>
+            <span class="metric-label">Data</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="story.html">Story</a>
+        <a href="https://github.com/YOUR_USERNAME" target="_blank">GitHub</a>
+      </div>
+      <div class="footer-brand">Heart Disease Intelligence</div>
+    </div>
+  </footer>
+
+  <script>
+    // Tableau Initialization
+    var divElement = document.getElementById('viz1773415660397');
+    var vizElement = divElement.getElementsByTagName('object')[0];
+    vizElement.style.width = '100%';
+    vizElement.style.height = '827px';
+    var scriptElement = document.createElement('script');
+    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+    vizElement.parentNode.insertBefore(scriptElement, vizElement);
+    // Reset Function
+    function resetViz() {
+      location.reload();
+    }
+  </script>
+</body>
+
+</html>
+    
+  </body>
+  
+</html>
